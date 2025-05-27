@@ -9,7 +9,15 @@ class Diagnosa extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['hewan_id', 'dokter_id', 'tanggal_diagnosa', 'catatan'];
+    protected $table = 'diagnosas';
+    protected $fillable = [
+        'hewan_id', 'dokter_id', 'tanggal_diagnosa', 'catatan'
+    ];
+
+     public function pasien() // Pastikan nama relasi ini 'pasien'
+    {
+        return $this->belongsTo(Pet::class, 'hewan_id'); // foreign key di tabel diagnosas adalah 'hewan_id'
+    }
 
     public function hewan()
     {
@@ -26,4 +34,8 @@ class Diagnosa extends Model
     return $this->hasMany(Obat::class);
     }
     
+    public function pet()
+    {
+        return $this->belongsTo(Pet::class, 'hewan_id');
+    }
 }

@@ -56,7 +56,7 @@ CREATE TABLE IF NOT EXISTS `diagnosas` (
   CONSTRAINT `diagnosas_hewan_id_foreign` FOREIGN KEY (`hewan_id`) REFERENCES `pets` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table petsnap.diagnosas: ~0 rows (approximately)
+-- Dumping data for table petsnap.diagnosas: ~2 rows (approximately)
 DELETE FROM `diagnosas`;
 INSERT INTO `diagnosas` (`id`, `hewan_id`, `dokter_id`, `tanggal_diagnosa`, `catatan`, `created_at`, `updated_at`) VALUES
 	(2, 5, 2, '2025-05-05', 'sakit panas', '2025-05-05 05:28:28', '2025-05-05 05:28:28'),
@@ -86,7 +86,7 @@ CREATE TABLE IF NOT EXISTS `migrations` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table petsnap.migrations: ~9 rows (approximately)
+-- Dumping data for table petsnap.migrations: ~13 rows (approximately)
 DELETE FROM `migrations`;
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 	(1, '2014_10_12_000000_create_users_table', 1),
@@ -117,7 +117,7 @@ CREATE TABLE IF NOT EXISTS `obats` (
   CONSTRAINT `obats_diagnosa_id_foreign` FOREIGN KEY (`diagnosa_id`) REFERENCES `diagnosas` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table petsnap.obats: ~1 rows (approximately)
+-- Dumping data for table petsnap.obats: ~2 rows (approximately)
 DELETE FROM `obats`;
 INSERT INTO `obats` (`id`, `diagnosa_id`, `nama_obat`, `dosis`, `catatan`, `created_at`, `updated_at`) VALUES
 	(2, 2, 'Meloxikam', '1,5mg', 'berikan 1,5mg setelah makan', '2025-05-05 05:28:47', '2025-05-05 21:07:23'),
@@ -169,7 +169,7 @@ CREATE TABLE IF NOT EXISTS `pets` (
   PRIMARY KEY (`id`),
   KEY `pets_pemilik_id_foreign` (`pemilik_id`),
   CONSTRAINT `pets_pemilik_id_foreign` FOREIGN KEY (`pemilik_id`) REFERENCES `akuns` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dumping data for table petsnap.pets: ~2 rows (approximately)
 DELETE FROM `pets`;
@@ -189,13 +189,13 @@ CREATE TABLE IF NOT EXISTS `users` (
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `users_email_unique` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table petsnap.users: ~0 rows (approximately)
+-- Dumping data for table petsnap.users: ~2 rows (approximately)
 DELETE FROM `users`;
 INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
 	(1, 'Adminklinik', 'adminklinik@gmail.com', NULL, '$2y$12$OhIYJDnZ1JQIKdeQOs6LvOOpiWVeqcKClDLA8hF1cZL2UWAjcZBhS', NULL, '2025-04-29 18:40:58', '2025-04-29 18:40:58'),
-	(2, 'ci', 'ci@gmail.com', NULL, '$2y$12$qu7ZE08COHJZGTHBHccYzejv5NvSJIE6gD6aE4e8y9vILwA8YUSia', NULL, '2025-05-06 21:41:37', '2025-05-06 21:41:37');
+	(2, 'ci', 'ci@gmail.com', NULL, '$2y$12$124y/N9WL5Iq/AXEqB7IHO94IR7P.8d3DI03gFI.2RUViqnUknDEG', NULL, '2025-05-06 21:41:37', '2025-05-11 20:26:40');
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
