@@ -26,6 +26,11 @@ class Akun extends Authenticatable
         'remember_token',
     ];
 
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed', // Laravel 10+
+    ];
+
     /**
      * Relasi: satu akun memiliki satu pemilik
      */

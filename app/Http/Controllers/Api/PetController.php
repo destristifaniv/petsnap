@@ -7,6 +7,7 @@ use App\Models\Pet;
 use App\Models\Diagnosa;
 use App\Models\Dokter;
 use App\Models\Pemilik;
+use App\Models\Akun;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -99,6 +100,60 @@ class PetController extends Controller
         ]);
     }
 
-    // di PetController@getPetsByPemilikAkunId atau PemilikController@getPetsByPemilikAkunId
-    // (Catatan: kode berikut harus berada di dalam sebuah method, bukan langsung di dalam kelas)
+    public function store(Request $request)
+    {
+        Log::info('PetController@store: Request diterima', $request->all());
+
+        // Validasi data sesuai dengan skema tabel 'pets'
+        $validatedData = $request->validate([
+            'nama' => 'required|string|max:255',
+            'jenis' => 'required|string|max:255',
+            'warna' => 'nullable|string|max:255', // Nullable di DB
+            'usia' => 'required|integer|min:0',
+            'kondisi' => 'required|string|max:255', // NOT NULL di DB
+            'pemilik_id' => 'required|integer', // Ini adalah akun_id dari Flutter
+            'dokter_id' => 'nullable|integer|exists:dokters,id', // Nullable di DB, jika dikirim
+            'foto' => 'nullable|string|max:255', // Nullable di DB, jika dikirim
+        ]);
+
+        // --- PENTING: Konversi akun_id menjadi id primary key pemilik ---
+        $akunIdDariFlutter = $validatedData['pemilik_id'];
+        $pemilik = Pemilik::where('akun_id', $akunIdDariFlutter)->first();
+
+        if (!$pemilik) {
+            Log::error('PetController@store: Pemilik tidak ditemukan untuk akunId: ' . $akunIdDariFlutter);
+            return response()->json(['status' => 'error', 'message' => 'Pemilik tidak valid atau tidak terdaftar'], 400);
+        }
+        Log::info("PetController@store: Pemilik ditemukan, ID: {$pemilik->id}");
+        // ------------------------------------------------------------------
+
+        try {
+            $pet = Pet::create([
+                'nama' => $validatedData['nama'],
+                'jenis' => $validatedData['jenis'],
+                'warna' => $validatedData['warna'] ?? null, // Gunakan null jika kosong dari Flutter
+                'usia' => $validatedData['usia'],
+                'kondisi' => $validatedData['kondisi'],
+                'pemilik_id' => $pemilik->id, // <-- Gunakan ID primary key pemilik yang sebenarnya
+                'dokter_id' => $validatedData['dokter_id'] ?? null,
+                'foto' => $validatedData['foto'] ?? null,
+            ]);
+
+            Log::info("Hewan berhasil disimpan: ID {$pet->id}");
+            return response()->json(['status' => 'success', 'message' => 'Hewan berhasil ditambahkan', 'data' => $pet], 201);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            Log::error("PetController@store: Validasi gagal: " . json_encode($e->errors()));
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Data validasi tidak sesuai',
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            Log::error("PetController@store: Gagal menyimpan hewan: " . $e->getMessage() . " di " . $e->getFile() . ":" . $e->getLine());
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Gagal menyimpan hewan: ' . $e->getMessage()
+            ], 500);
+        }
+    }
 }

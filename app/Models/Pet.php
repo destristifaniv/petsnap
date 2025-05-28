@@ -16,8 +16,9 @@ class Pet extends Model
         'jenis',     // Jenis hewan
         'warna',     // Warna hewan
         'usia',      // Usia hewan
-        'catatan',   // Kondisi hewan
-        'pemilik_id' // ID pemilik hewan (relasi ke tabel Akun)
+        'kondisi',   // Kondisi hewan
+        'pemilik_id', // ID pemilik hewan (relasi ke tabel Akun)
+        'dokter_id', // ID dokter yang menangani hewan (relasi ke tabel Akun)
     ];
 
     public function pemilik()

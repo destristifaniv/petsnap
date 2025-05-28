@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\PetController;
 use App\Http\Controllers\Api\DiagnosaController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DokterController;
+use App\Http\Controllers\Api\ProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,8 +38,14 @@ Route::middleware('auth:sanctum')->group(function () {
         return $request->user();
     });
 
+    Route::post('/logout', [AuthController::class, 'logout']);
+
     // Profil akun pemilik (beserta relasi ke pemilik dan pets-nya)
-    Route::get('/profil/{id}', [AkunController::class, 'show']);
+    Route::get('/profil/{akunId}', [AkunController::class, 'show']);
+    Route::put('/profil/{akunId}', [ProfileController::class, 'update']);
+
+    // Rute untuk Ubah Kata Sandi
+    Route::put('/change-password/{akunId}', [ProfileController::class, 'changePassword']);
 
     /*
     |--------------------------------------------------------------------------
@@ -66,6 +73,8 @@ Route::middleware('auth:sanctum')->group(function () {
     | Hewan Peliharaan (Pets)
     |--------------------------------------------------------------------------
     */
+    // Route untuk menambah pet baru
+    Route::post('/pets', [PetController::class, 'store']);
 
     // Daftar hewan yang ditugaskan ke dokter
     Route::get('/pets/by-dokter/{dokterId}', [PetController::class, 'petsByDokter']);
